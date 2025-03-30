@@ -1,5 +1,5 @@
 from Classes.Node import Node
-from Functions.work_with_tree import appropriate_descendants, read_file
+from Functions.work_with_tree import appropriate_descendants, read_file, draw_tree
 
 
 def main():
