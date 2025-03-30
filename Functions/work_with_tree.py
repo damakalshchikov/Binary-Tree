@@ -1,7 +1,7 @@
 from Classes.Node import Node
 
 
-def read_file(file_name: str) -> list[Node or None]:
+def read_file(file_name: str) -> list[Node | None]:
     """
     Читает файл и преобразует строки в тип None или тип Node
     :param file_name: имя файла
@@ -24,7 +24,7 @@ def read_file(file_name: str) -> list[Node or None]:
     return tree
 
 
-def appropriate_descendants(tree: list[Node or None]) -> None:
+def appropriate_descendants(tree: list[Node | None]) -> None:
     """
     Данная функция присваивает вершинам соответствующих потомков
     :param tree: массив с вершинами
