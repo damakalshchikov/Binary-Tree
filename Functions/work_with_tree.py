@@ -5,9 +5,9 @@ from Classes.Node import Node
 
 def read_file(file_name: str) -> list[Node | None]:
     """
-    Читает файл и преобразует строки в тип None или тип Node
-    :param file_name: имя файла
-    :return: массив с элементами типа Node или None
+    Читает файл и преобразует строки в тип None или тип Node.
+    :param file_name: Имя файла
+    :return: Массив с элементами типа Node или None
     """
 
     tree: list = []
@@ -28,8 +28,8 @@ def read_file(file_name: str) -> list[Node | None]:
 
 def appropriate_descendants(tree: list[Node | None]) -> None:
     """
-    Данная функция присваивает вершинам соответствующих потомков
-    :param tree: массив с вершинами
+    Данная функция присваивает вершинам соответствующих потомков.
+    :param tree: Массив с вершинами
     :return: None
     """
 
@@ -53,9 +53,9 @@ def appropriate_descendants(tree: list[Node | None]) -> None:
 
 def draw_tree(tree: list[Node | None], output_png: str = "./Images/tree.png") -> None:
     """
-    Данная функция визуализирует бинарное дерево
-    :param tree: массив со связанными вершинами дерева
-    :param output_png: имя выходного файла
+    Данная функция визуализирует бинарное дерево.
+    :param tree: Массив со связанными вершинами дерева
+    :param output_png: Имя выходного файла
     :return: None
     """
 
