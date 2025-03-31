@@ -82,7 +82,6 @@ def draw_tree(tree: list[Node | None], output_png: str = "./Images/tree.png") ->
         if left_index < limit and tree[left_index] is not None:
             picture.add_edge(pydot.Edge(str(index), left_index))
         if right_index < limit and tree[right_index] is not None:
-            graph.add_edge(pydot.Edge(str(index), right_index))
             picture.add_edge(pydot.Edge(str(index), right_index))
 
     picture.write(output_png, format="png")
