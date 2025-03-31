@@ -1,9 +1,9 @@
 import pydot
 
-from Classes.Node import Node
+import Classes
 
 
-def read_file(file_name: str) -> list[Node | None]:
+def read_file(file_name: str) -> list[Classes.Node | None]:
     """
     Читает файл и преобразует строки в тип None или тип Node.
     :param file_name: Имя файла
@@ -20,15 +20,15 @@ def read_file(file_name: str) -> list[Node | None]:
                 tree.append(None)
                 continue
 
-            node: Node = Node(int(node))
+            node: Classes.Node = Classes.Node(int(node))
             tree.append(node)
 
     return tree
 
 
-def appropriate_descendants(tree: list[Node | None]) -> None:
+def appropriate_descendants(tree: list[Classes.Node | None]) -> None:
     """
-    Данная функция присваивает вершинам соответствующих потомков.
+    Присваивает вершинам соответствующих потомков.
     :param tree: Массив с вершинами
     :return: None
     """
@@ -51,9 +51,9 @@ def appropriate_descendants(tree: list[Node | None]) -> None:
             node.right = tree[right_index]
 
 
-def draw_tree(tree: list[Node | None], output_png: str = "./Images/tree.png") -> None:
+def draw_tree(tree: list[Classes.Node | None], output_png: str = "./Images/tree.png") -> None:
     """
-    Данная функция визуализирует бинарное дерево.
+    Визуализирует бинарное дерево.
     :param tree: Массив со связанными вершинами дерева
     :param output_png: Имя выходного файла
     :return: None
@@ -87,7 +87,7 @@ def draw_tree(tree: list[Node | None], output_png: str = "./Images/tree.png") ->
     picture.write(output_png, format="png")
 
 
-def draw_path(tree: list[Node | None], path: list[Node], output_png: str = "./Images/paths.png") -> None:
+def draw_path(tree: list[Classes.Node | None], path: list[Classes.Node], output_png: str = "./Images/paths.png") -> None:
     """
     Визуализирует бинарное дерево с выделенным путём
     :param tree: Список вершин бинарного дерева
@@ -96,16 +96,16 @@ def draw_path(tree: list[Node | None], path: list[Node], output_png: str = "./Im
     :return: None
     """
 
-    picture = pydot.Dot(graph_type="digraph")
+    picture: pydot.Dot = pydot.Dot(graph_type="digraph")
 
     # Создаем словарь для быстрого поиска индекса узла в дереве
-    node_indices = {}
+    node_indices: dict[Classes.Node, int] = {}
     for index, node in enumerate(tree):
         if node is not None:
             node_indices[node] = index
 
     # Формируем множество вершин, входящих в путь
-    path_nodes = set(path)
+    path_nodes: set = set(path)
 
     # Добавляем все вершины на граф
     for index, node in enumerate(tree):
@@ -121,22 +121,24 @@ def draw_path(tree: list[Node | None], path: list[Node], output_png: str = "./Im
         picture.add_node(pydot_node)
 
     # Добавляем все ребра
-    none_count = 0
-    limit = len(tree)
+    none_count: int = 0
+    limit: int = len(tree)
 
     for index, node in enumerate(tree):
         if node is None:
             none_count += 2
             continue
 
-        left_index = index * 2 + 1 - none_count
-        right_index = index * 2 + 2 - none_count
+        left_index: int = index * 2 + 1 - none_count
+        right_index: int = index * 2 + 2 - none_count
 
         # Добавляем ребро к левому потомку
         if left_index < limit and tree[left_index] is not None:
             # Проверяем, является ли ребро частью пути
-            is_path_edge = (node in path_nodes and tree[left_index] in path_nodes and
-                            path.index(tree[left_index]) == path.index(node) + 1)
+            is_path_edge: bool = (
+                    node in path_nodes and tree[left_index] in path_nodes and
+                    path.index(tree[left_index]) == path.index(node) + 1
+            )
 
             if is_path_edge:
                 picture.add_edge(pydot.Edge(str(index), str(left_index), color="blue", penwidth=2.0))
@@ -146,8 +148,10 @@ def draw_path(tree: list[Node | None], path: list[Node], output_png: str = "./Im
         # Добавляем ребро к правому потомку
         if right_index < limit and tree[right_index] is not None:
             # Проверяем, является ли ребро частью пути
-            is_path_edge = (node in path_nodes and tree[right_index] in path_nodes and
-                            path.index(tree[right_index]) == path.index(node) + 1)
+            is_path_edge: bool = (
+                    node in path_nodes and tree[right_index] in path_nodes and
+                    path.index(tree[right_index]) == path.index(node) + 1
+            )
 
             if is_path_edge:
                 picture.add_edge(pydot.Edge(str(index), str(right_index), color="blue", penwidth=2.0))
@@ -157,7 +161,7 @@ def draw_path(tree: list[Node | None], path: list[Node], output_png: str = "./Im
     picture.write(output_png, format="png")
 
 
-def find_longest_path(tree: list[Node | None]) -> list[list[Node]]:
+def find_longest_path(tree: list[Classes.Node | None]) -> list[list[Classes.Node]]:
     """
     Находит все длиннейшие пути в бинарном дереве,
     вдоль которых номера вершин упорядочены по возрастанию.
@@ -170,29 +174,29 @@ def find_longest_path(tree: list[Node | None]) -> list[list[Node]]:
         return []
 
     # Словарь для хранения максимальной длины пути, начинающегося с каждой вершины
-    longest_path: dict[Node, list[list[Node]]] = {}
+    longest_path: dict[Classes.Node, list[list[Classes.Node]]] = {}
     max_length: int = 0
 
     # Рекурсивная функция для поиска путей
-    def dfs(node: Node) -> list[list[Node]]:
+    def dfs(node: Classes.Node) -> list[list[Classes.Node]]:
         # Базовый случай
         if node in longest_path:
             return longest_path[node]
 
-        paths = [[node]]
+        paths: list[list[Classes.Node]] = [[node]]
 
         if node.left and node.left.number > node.number:
-            left_path = dfs(node.left)
+            left_path: list[list[Classes.Node]] = dfs(node.left)
             for path in left_path:
                 paths.append([node] + path)
 
         if node.right and node.right.number > node.number:
-            right_path = dfs(node.right)
+            right_path: list[list[Classes.Node]] = dfs(node.right)
             for path in right_path:
                 paths.append([node] + path)
 
         max_path_length: int = max(len(path) for path in paths)
-        longest_path_from_node = [path for path in paths if len(path) == max_path_length]
+        longest_path_from_node: list[list[Classes.Node]] = [path for path in paths if len(path) == max_path_length]
 
         longest_path[node] = longest_path_from_node
         return longest_path[node]
@@ -209,8 +213,8 @@ def find_longest_path(tree: list[Node | None]) -> list[list[Node]]:
             elif longest_from_node == max_length:
                 all_longest_paths.extend(node_paths)
 
-    result_paths = []
-    seen_paths = set()
+    result_paths: list[list[Classes.Node]] = []
+    seen_paths: set = set()
 
     for path in all_longest_paths:
         if len(path) == max_length:
