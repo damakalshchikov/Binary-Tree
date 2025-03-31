@@ -14,12 +14,13 @@ def main():
     # Вызов ф-ии, которая устанавливает связь между вершинами в соответствии с исходными данными
     appropriate_descendants(tree)
 
-    for index, node in enumerate(tree):
-        if node is None:
-            print(f"None")
-            continue
-
-        print(f"Вершина {node}. Левый потомок {node.left}, правый потомок {node.right}")
+    # Отладочная печать
+    # for index, node in enumerate(tree):
+    #     if node is None:
+    #         print(f"None")
+    #         continue
+    #
+    #     print(f"Вершина {node}. Левый потомок {node.left}, правый потомок {node.right}")
 
     # Вызов ф-ии, которая создаёт изображение бинарного дерева
     draw_tree(tree)
