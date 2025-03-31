@@ -86,7 +86,75 @@ def draw_tree(tree: list[Node | None], output_png: str = "./Images/tree.png") ->
 
     picture.write(output_png, format="png")
 
-    graph.write(output_png, format="png")
+
+def draw_path(tree: list[Node | None], path: list[Node], output_png: str = "./Images/paths.png") -> None:
+    """
+    Визуализирует бинарное дерево с выделенным путём
+    :param tree: Список вершин бинарного дерева
+    :param path: Путь, который нужно выделить
+    :param output_png: Имя выходного файла
+    :return: None
+    """
+
+    picture = pydot.Dot(graph_type="digraph")
+
+    # Создаем словарь для быстрого поиска индекса узла в дереве
+    node_indices = {}
+    for index, node in enumerate(tree):
+        if node is not None:
+            node_indices[node] = index
+
+    # Формируем множество вершин, входящих в путь
+    path_nodes = set(path)
+
+    # Добавляем все вершины на граф
+    for index, node in enumerate(tree):
+        if node is None:
+            continue
+
+        # Если вершина входит в путь, выделяем ее цветом
+        if node in path_nodes:
+            pydot_node = pydot.Node(str(index), label=str(node.number), style="filled", fillcolor="lightblue")
+        else:
+            pydot_node = pydot.Node(str(index), label=str(node.number))
+
+        picture.add_node(pydot_node)
+
+    # Добавляем все ребра
+    none_count = 0
+    limit = len(tree)
+
+    for index, node in enumerate(tree):
+        if node is None:
+            none_count += 2
+            continue
+
+        left_index = index * 2 + 1 - none_count
+        right_index = index * 2 + 2 - none_count
+
+        # Добавляем ребро к левому потомку
+        if left_index < limit and tree[left_index] is not None:
+            # Проверяем, является ли ребро частью пути
+            is_path_edge = (node in path_nodes and tree[left_index] in path_nodes and
+                            path.index(tree[left_index]) == path.index(node) + 1)
+
+            if is_path_edge:
+                picture.add_edge(pydot.Edge(str(index), str(left_index), color="blue", penwidth=2.0))
+            else:
+                picture.add_edge(pydot.Edge(str(index), str(left_index)))
+
+        # Добавляем ребро к правому потомку
+        if right_index < limit and tree[right_index] is not None:
+            # Проверяем, является ли ребро частью пути
+            is_path_edge = (node in path_nodes and tree[right_index] in path_nodes and
+                            path.index(tree[right_index]) == path.index(node) + 1)
+
+            if is_path_edge:
+                picture.add_edge(pydot.Edge(str(index), str(right_index), color="blue", penwidth=2.0))
+            else:
+                picture.add_edge(pydot.Edge(str(index), str(right_index)))
+
+    picture.write(output_png, format="png")
 
 
 def find_longest_path(tree: list[Node | None]) -> list[list[Node]]:
