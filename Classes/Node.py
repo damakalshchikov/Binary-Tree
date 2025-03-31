@@ -1,4 +1,8 @@
 class Node:
+    """
+    Класс, который представляет вершину бинарного дерева
+    """
+
     def __init__(self, number) -> None:
         self.number = number
         self.left = None
