@@ -1,45 +1,61 @@
-from Classes.Node import Node
-from Functions.work_with_tree import appropriate_descendants, read_file, draw_tree, find_longest_path, draw_path
+import Classes
+import Functions
 
 
-def main():
+def main(prog_mode: int, file: str, strings_count: int = 0) -> None:
+    if prog_mode == 2:
+        # Генерируем файл со структурой бинарного дерева
+        Functions.gen_test_file(file, strings_count)
 
-    # Печать приветственной информации и ввод источника данных
-    print("Данная программа находит длиннейший путь(пути),\nвдоль которого номера вершин упорядочены по возрастанию\n")
-    file_name: str = input("Введите имя файла для считывания входных данных: ")
+    # Чтение файла структуры бинарного дерева
+    tree: list[Classes.Node | None] = Functions.read_file(file)
 
-    # Вызов ф-ии, которая преобразует текстовый файл в массив с вершинами дерева
-    tree: list[Node | None] = read_file(file_name)
+    # Устанавливаем связи между вершинами в соответствии со структурой файла
+    Functions.appropriate_descendants(tree)
 
-    # Вызов ф-ии, которая устанавливает связь между вершинами в соответствии с исходными данными
-    appropriate_descendants(tree)
+    # Генерируем изображение бинарного дерева
+    Functions.draw_tree(tree)
 
-    # Отладочная печать
-    # for index, node in enumerate(tree):
-    #     if node is None:
-    #         print(f"None")
-    #         continue
-    #
-    #     print(f"Вершина {node}. Левый потомок {node.left}, правый потомок {node.right}")
+    # Поиск длиннейших путей, вдоль которых вершины упорядочены по возрастанию
+    longest_paths = Functions.find_longest_path(tree)
 
-    # Вызов ф-ии, которая создаёт изображение бинарного дерева
-    draw_tree(tree)
-
-    # Вызов ф-ии поиска длиннейших возрастающих путей
-    longest_paths = find_longest_path(tree)
-
-    # Вывод найденных путей
+    # Если пути не были найдены, то информируем об этом
     if not longest_paths:
         print("\nВ данном дереве нет возрастающих путей.")
     else:
+        # Если пути были найдены, то выводим их
         print(f"\nНайдено {len(longest_paths)} длиннейших возрастающих путей:")
 
         for i, path in enumerate(longest_paths, 1):
             path_str = " -> ".join(str(node.number) for node in path)
-            print(f"Путь {i}: {path_str} (длина: {len(path)})")
-            # Вызов ф-ии, которая визуализирует найденные пути
-            draw_path(tree, path, output_png=f"./Images/path{i}.png")
+            print(f"Путь {i}: {path_str}")
+
+            # Генерируем изображение найденного пути
+            Functions.draw_path(tree, path, output_png=f"./Images/path{i}.png")
 
 
 if __name__ == "__main__":
-    main()
+    # Очищаем каталог "Images"
+    Functions.clear_images_folder()
+
+    # Вывод информации и меню
+    print(
+        "Данная программа выполняет поиск длиннейших путей в бинарном дереве,\n"
+        "вдоль которых вершины расположены в порядке возрастания.\n\n"
+        "Меню:\n"
+        "1 - чтение бинарного дерева из существующего файла.\n"
+        "2 - генерация файла бинарного дерева и его чтение.\n\n"
+    )
+
+    # mode - режим работы программы
+    # file_name - имя файла для чтения/генерации
+    mode: int = int(input("Выберете режим работы программы: "))
+    file_name: str = "./Cases/" + input("Введите имя файла: ")
+
+    if mode == 1:
+        # Работа программы в режиме 1
+        main(mode, file_name)
+    else:
+        n: int = int(input("Введите количество вершин в бинарном дереве: "))
+        # Работа программы в режиме 2
+        main(mode, file_name, n)
