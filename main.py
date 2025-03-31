@@ -28,6 +28,16 @@ def main():
     # Вызов ф-ии поиска длиннейших возрастающих путей
     longest_paths = find_longest_path(tree)
 
+    # Вывод найденных путей
+    if not longest_paths:
+        print("\nВ данном дереве нет возрастающих путей.")
+    else:
+        print(f"\nНайдено {len(longest_paths)} длиннейших возрастающих путей:")
+
+        for i, path in enumerate(longest_paths, 1):
+            path_str = " -> ".join(str(node.number) for node in path)
+            print(f"Путь {i}: {path_str} (длина: {len(path)})")
+
 
 if __name__ == "__main__":
     main()
