@@ -59,14 +59,14 @@ def draw_tree(tree: list[Node | None], output_png: str = "./Images/tree.png") ->
     :return: None
     """
 
-    graph: pydot.Dot = pydot.Dot(graph_type="digraph")
+    picture: pydot.Dot = pydot.Dot(graph_type="digraph")
 
     for index, node in enumerate(tree):
         if node is None:
             continue
 
         pydot_node = pydot.Node(str(index), label=str(node.number))
-        graph.add_node(pydot_node)
+        picture.add_node(pydot_node)
 
     none_count: int = 0
     limit: int = len(tree)
@@ -80,9 +80,12 @@ def draw_tree(tree: list[Node | None], output_png: str = "./Images/tree.png") ->
         right_index: int = index * 2 + 2 - none_count
 
         if left_index < limit and tree[left_index] is not None:
-            graph.add_edge(pydot.Edge(str(index), left_index))
+            picture.add_edge(pydot.Edge(str(index), left_index))
         if right_index < limit and tree[right_index] is not None:
             graph.add_edge(pydot.Edge(str(index), right_index))
+            picture.add_edge(pydot.Edge(str(index), right_index))
+
+    picture.write(output_png, format="png")
 
     graph.write(output_png, format="png")
 
